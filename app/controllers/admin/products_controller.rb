@@ -1,5 +1,5 @@
 class Admin::ProductsController < ApplicationController
-  http_basic_authenticate_with name: ENV['ADMIN_USERNAME'], password: ENV['ADMIN_PASSWORD']
+  http_basic_authenticate_with name: ENV.fetch('ADMIN_USERNAME', 'default_username'), password: ENV.fetch('ADMIN_PASSWORD', 'default_password')
 
   def index
     @products = Product.all
