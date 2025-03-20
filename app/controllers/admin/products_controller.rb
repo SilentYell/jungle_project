@@ -1,7 +1,8 @@
 class Admin::ProductsController < ApplicationController
+  http_basic_authenticate_with name: ENV['ADMIN_USERNAME'], password: ENV['ADMIN_PASSWORD']
 
   def index
-    @products = Product.order(id: :desc).all
+    @products = Product.all
   end
 
   def new
@@ -10,31 +11,22 @@ class Admin::ProductsController < ApplicationController
 
   def create
     @product = Product.new(product_params)
-
     if @product.save
-      redirect_to [:admin, :products], notice: 'Product created!'
+      redirect_to [:admin, :products], notice: 'Product was successfully created.'
     else
       render :new
     end
   end
 
   def destroy
-    @product = Product.find params[:id]
+    @product = Product.find(params[:id])
     @product.destroy
-    redirect_to [:admin, :products], notice: 'Product deleted!'
+    redirect_to [:admin, :products], notice: 'Product was successfully deleted.'
   end
 
   private
 
   def product_params
-    params.require(:product).permit(
-      :name,
-      :description,
-      :category_id,
-      :quantity,
-      :image,
-      :price
-    )
+    params.require(:product).permit(:name, :description, :price, :quantity, :category_id, :image)
   end
-
 end
